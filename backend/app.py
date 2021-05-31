@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -17,7 +19,7 @@ class Articles(db.Model):
     body = db.Column(db.Text())
     date = db.Column(db.DateTime, default = datetime.datetime.now)
 
-    def __init__(self, title, body) -> None:
+    def __init__(self, title, body):
         self.title = title
         self.body = body
 
@@ -28,7 +30,6 @@ class ArticleSchema(ma.Schema):
 article_schema = ArticleSchema()
 articles_schema = ArticleSchema(many=True)
 
-
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
@@ -38,11 +39,11 @@ def get_articles():
     all_articles = Articles.query.all()
     results = articles_schema.dump(all_articles)
     return jsonify(results)
-    # return_obj = [
-    #     {"body":"test-body-1", "date": "2021-05-05"},
-    #     {"body":"test-body-2", "date": "2021-05-06"}
-    # ]
-    # return jsonify(return_obj)
+
+@app.route('/get/<id>', methods=["GET"])
+def get_details():
+    article = Articles.query.get(id)
+    return articles_schema.jsonify(article)
 
 @app.route('/add', methods=["POST"])
 def add_article():
@@ -54,3 +55,11 @@ def add_article():
     db.session.commit()
     return article_schema.jsonify(articles)
 
+
+@app.route('/delete/<id>/', methods=["DELETE"])
+def article_article(id):
+
+    article = Articles.query.get(id)
+    db.session.delete(article)
+    db.session.commit()
+    return article_schema.jsonify(article)
