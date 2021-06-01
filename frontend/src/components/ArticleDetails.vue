@@ -31,7 +31,7 @@ export default {
             })
             .then(response => response.json())
             .then(data => {
-                this.articles = data
+                this.article = data
             })
             .catch(err => console.log(err))
         }

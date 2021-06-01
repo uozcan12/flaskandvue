@@ -42,8 +42,8 @@ def get_articles():
 
 @app.route('/get/<id>/', methods=["GET"])
 def post_details(id):
-    article = Articles.query.get(id)
-    return articles_schema.jsonify(article)
+    article = Articles.query.get(id) #db.session.query(Articles).get(id)
+    return article_schema.jsonify(article)
 
 @app.route('/add', methods=["POST"])
 def add_article():
