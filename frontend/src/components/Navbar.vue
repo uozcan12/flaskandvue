@@ -14,9 +14,6 @@
       <li class="nav-item">
         <router-link class="btn btn-success" to="/create">Create</router-link>
       </li>
-      <li class="nav-item">
-        <router-link class="btn btn-danger" to="/create">Delete</router-link>
-      </li>
     </ul>
   </div>
 </nav>
